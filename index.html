@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wedstrijdopstellingen</title>
+<meta name="theme-color" content="#0b1f4b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Opstelling">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><div class="label">Coachbord</div><h1 id="app-title">Wedstrijdopstellingen</h1></div>
+    <div class="row">
+      <div class="tabs" role="group" aria-label="Weergave">
+        <button id="tab-w" aria-pressed="true">Wedstrijden</button>
+        <button id="tab-s" aria-pressed="false">Spelers</button>
+      </div>
+      <button class="btn" id="edit-btn">Bewerken</button>
+    </div>
+  </div>
+
+  <form class="panel" id="pin-form" hidden>
+    <div class="row">
+      <label class="row" style="gap:6px">Pincode <input type="password" id="pin-input" inputmode="numeric" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">Ontgrendel</button>
+      <button class="btn" type="button" id="pin-cancel">Annuleren</button>
+      <span class="note" id="pin-err"></span>
+    </div>
+  </form>
+
+  <div id="status" class="status">Gegevens laden…</div>
+
+  <section id="view-w" class="stack">
+    <div class="row">
+      <div class="matches" id="matches"></div>
+      <button class="btn primary edit-only" id="new-btn">+ Nieuwe wedstrijd</button>
+    </div>
+    <form class="panel" id="new-form" hidden>
+      <h2>Nieuwe wedstrijd</h2>
+      <div class="row">
+        <label class="row" style="gap:6px">Datum <input type="date" id="new-date" required></label>
+        <label class="row" style="gap:6px">Tegenstander <input type="text" id="new-opp" placeholder="optioneel"></label>
+        <label class="row" style="gap:6px">Opstelling <select id="new-mode"><option value="voorstel" selected>Voorstel op basis van statistiek</option><option value="kopie">Kopie van huidige wedstrijd</option><option value="leeg">Leeg</option></select></label>
+      </div>
+      <div class="row"><button class="btn primary" type="submit">Toevoegen</button><button class="btn" type="button" id="new-cancel">Annuleren</button><span class="note" id="new-err"></span></div>
+    </form>
+    <div id="match"></div>
+  </section>
+
+  <section id="view-s" class="stack" hidden>
+    <div class="panel">
+      <h2>Spelerslijst</h2>
+      <div class="tablewrap"><table class="ptable"><thead><tr><th>Naam</th><th>Voorkeur</th><th>Posities (bv. RB, RCV)</th><th></th></tr></thead><tbody id="ptbody"></tbody></table></div>
+      <form class="row edit-only" id="add-player">
+        <input type="text" id="ap-name" placeholder="Naam" required>
+        <select id="ap-pref"><option>Keeper</option><option>Verdediging</option><option selected>Middenveld</option><option>Aanval</option></select>
+        <input type="text" id="ap-pos" placeholder="Posities">
+        <button class="btn primary" type="submit">Speler toevoegen</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Statistiek</h2>
+      <div class="status">Over alle wedstrijden tot en met vandaag. Dit gebruikt het voorstel om speeltijd eerlijk te verdelen.</div>
+      <div class="tablewrap"><table><thead><tr><th>Speler</th><th>Wedstr.</th><th>Minuten</th><th>% gespeeld</th><th>Blokken</th><th>Bank</th><th>Basis</th><th>Afgemeld</th></tr></thead><tbody id="stbody"></tbody></table></div>
+    </div>
+  </section>
+</div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="voorstel.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

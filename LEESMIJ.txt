@@ -1,0 +1,77 @@
+WEDSTRIJDOPSTELLINGEN – installatie
+====================================
+
+Wat het is
+----------
+Een web-app die je op de telefoon als app installeert. Iedereen met de link
+kan meekijken. Aanpassen kan alleen na het invoeren van de pincode.
+Wijzigingen verschijnen direct op alle telefoons.
+
+Bestanden
+---------
+index.html, styles.css, app.js, config.js   de app zelf
+voorstel.js                                 maakt het opstellingsvoorstel
+manifest.webmanifest, sw.js, icons/         nodig om te installeren en offline te openen
+supabase/schema.sql                         database, inclusief spelers en de wedstrijd van 06-11-2026
+
+
+STAP 1 – Database aanmaken (Supabase, gratis)
+---------------------------------------------
+1. Ga naar supabase.com en maak een account en een nieuw project aan
+   (regio: Frankfurt of een andere in Europa).
+2. Open in het project: SQL Editor > New query.
+3. Plak de volledige inhoud van supabase/schema.sql en klik op Run.
+4. Wijzig de startpincode 1234. Voer in de SQL Editor deze regel uit, met je eigen code:
+   update public.settings set pin_hash = extensions.crypt('JOUWCODE', extensions.gen_salt('bf')) where id = 1;
+
+STAP 2 – App koppelen aan de database
+-------------------------------------
+1. In Supabase: Project Settings > API (of "Data API").
+2. Kopieer de Project URL en de "anon public" key.
+3. Open config.js en vul beide in. Pas eventueel TEAM_NAAM aan.
+   De anon key mag openbaar zijn: schrijven gaat alleen met de pincode.
+
+STAP 3 – Online zetten (GitHub Pages)
+-------------------------------------
+1. Maak op GitHub een nieuwe repository, bijvoorbeeld "opstellingen".
+2. Upload alle bestanden en mappen uit deze zip (behalve LEESMIJ.txt, mag ook mee).
+3. Repository > Settings > Pages > Source: "Deploy from a branch",
+   branch "main", map "/ (root)". Opslaan.
+4. Na een minuut staat de app op https://<gebruikersnaam>.github.io/opstellingen/
+
+Je eigen server kan ook: zet alle bestanden in één map op een HTTPS-adres.
+
+STAP 4 – Op de telefoon installeren
+-----------------------------------
+iPhone: open de link in Safari > deelknop > "Zet op beginscherm".
+Android: open de link in Chrome > menu (⋮) > "App installeren".
+
+Gebruik
+-------
+- Tik op "Bewerken" en voer de pincode in. De telefoon onthoudt de code tot je op "Vergrendel" tikt.
+- Wedstrijden: tik op een datum, of op "+ Nieuwe wedstrijd". Kies daar "Voorstel op basis van
+  statistiek" (standaard), "Kopie van huidige wedstrijd" of "Leeg".
+- "Opstelling voorstellen" in een wedstrijd vult de blokken opnieuw, met alleen de aanwezige spelers.
+  Het voorstel verdeelt de blokken eerlijk op basis van eerdere speelminuten, bankbeurten en
+  basisplaatsen, en zet spelers op hun voorkeursposities. Het blauwe kader legt uit wat het deed.
+- Afmelden: tik op de naam van een speler. Die verdwijnt ook uit de blokken.
+- Per positie kies je een speler. Spelers met die voorkeurspositie staan bovenaan,
+  met het aantal blokken dat ze al spelen.
+- Wie aanwezig is maar niet staat opgesteld, staat automatisch op de bank.
+- Bij blok 2 en 3 zie je de wissels (in voor uit) en wie van positie wisselt.
+- Onderaan de speeltijd: groen = 2 blokken, oranje = te veel of te weinig.
+- Tijden van een blok pas je aan in de kop van het blok.
+- Tabblad Spelers: spelers toevoegen, hernoemen, voorkeur en posities wijzigen.
+  Posities in volgorde van voorkeur: K, LB, LCV, RCV, RB, LM, CM, RM, LBU, SP, RBU.
+- Tabblad Spelers toont ook de statistiek per speler.
+
+Een nieuwe versie uitrollen
+---------------------------
+Vervang de bestanden op GitHub en verhoog in sw.js het nummer in
+CACHE = "opstellingen-v3" (bijvoorbeeld naar v4). Telefoons halen de update dan op
+bij de volgende keer openen.
+
+Let op
+------
+Supabase pauzeert een gratis project na een week zonder gebruik. Je zet het
+weer aan via het Supabase-dashboard ("Restore project"). Gegevens blijven bewaard.
